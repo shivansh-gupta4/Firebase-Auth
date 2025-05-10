@@ -10,13 +10,11 @@ const AuthForm = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Reset reCAPTCHA when component mounts or when switching between phone/email
   useEffect(() => {
     if (isPhone) {
       setupRecaptcha();
     }
     return () => {
-      // Cleanup reCAPTCHA when component unmounts or switches to email
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
