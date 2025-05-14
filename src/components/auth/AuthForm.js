@@ -68,13 +68,12 @@ const AuthForm = () => {
           window.recaptchaVerifier = null;
         }
         
-        // Force a re-render of the container
         if (recaptchaContainer) {
           recaptchaContainer.style.display = 'none';
           setTimeout(() => {
             recaptchaContainer.style.display = 'block';
             setupRecaptcha();
-          }, 1000); // Add a 1-second delay
+          }, 1000); 
         }
       } else if (error.code === 'auth/too-many-requests') {
         setError('Too many attempts. Please wait a few minutes before trying again.');

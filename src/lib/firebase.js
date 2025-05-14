@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,5 +16,28 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+
+setPersistence(auth, browserLocalPersistence)
+  .catch((error) => {
+    console.error("Auth persistence error:", error);
+  });
+
+
+if (typeof window !== 'undefined') {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+     
+      const idToken = await user.getIdToken();
+      
+      document.cookie = `authToken=${idToken}; path=/; max-age=3600; secure; samesite=strict`;
+    } else {
+      
+      document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+      window.localStorage.removeItem('emailForSignIn');
+      window.localStorage.removeItem('authToken');
+    }
+  });
+}
 
 export { app, auth };
